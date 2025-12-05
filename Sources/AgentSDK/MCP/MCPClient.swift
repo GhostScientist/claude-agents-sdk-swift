@@ -355,9 +355,14 @@ actor StdioTransport: MCPTransport {
 
         stdin.write(messageData)
 
-        return try await withCheckedThrowingContinuation { continuation in
-            pendingRequests[message.id] = continuation
+        let messageId = message.id
+        return try await withCheckedThrowingContinuation { [self] continuation in
+            Task { await self.storeContinuation(continuation, for: messageId) }
         }
+    }
+
+    private func storeContinuation(_ continuation: CheckedContinuation<JSONRPCResponse, Error>, for id: String) {
+        pendingRequests[id] = continuation
     }
 
     func sendNotification(_ notification: JSONRPCNotification) async throws {
@@ -509,12 +514,17 @@ actor SSETransport: MCPTransport {
 
         // Some servers return empty response for SSE (response comes via SSE stream)
         if data.isEmpty {
-            return try await withCheckedThrowingContinuation { continuation in
-                pendingRequests[message.id] = continuation
+            let messageId = message.id
+            return try await withCheckedThrowingContinuation { [self] continuation in
+                Task { await self.storeContinuation(continuation, for: messageId) }
             }
         }
 
         return try JSONDecoder().decode(JSONRPCResponse.self, from: data)
+    }
+
+    private func storeContinuation(_ continuation: CheckedContinuation<JSONRPCResponse, Error>, for id: String) {
+        pendingRequests[id] = continuation
     }
 
     func sendNotification(_ notification: JSONRPCNotification) async throws {
