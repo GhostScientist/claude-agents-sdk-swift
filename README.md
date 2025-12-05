@@ -19,40 +19,65 @@ A modern Swift framework for building AI-powered agents with tool calling, multi
 
 ## Architecture
 
+```mermaid
+flowchart TB
+    subgraph App["Your App"]
+        direction TB
+
+        subgraph Core["Core Components"]
+            Agent["Agent
+            • name
+            • instructions
+            • tools
+            • handoffs
+            • guardrails"]
+            Runner["Runner
+            • run()
+            • stream()"]
+            ViewModel["AgentViewModel
+            (SwiftUI)
+            • messages
+            • isRunning"]
+        end
+
+        subgraph Providers["LLM Providers"]
+            Claude["ClaudeProvider"]
+            Custom["Custom Provider"]
+        end
+
+        subgraph Tools["Tools"]
+            BuiltIn["Built-in Tools"]
+            CustomTools["Custom Tools"]
+            MCP["MCPToolProvider
+            (MCP Servers)"]
+        end
+
+        Agent --> Runner
+        Runner --> ViewModel
+        Runner --> Providers
+        Providers --> Tools
+    end
+
+    subgraph External["External Services"]
+        ClaudeAPI["Claude API"]
+        MCPServers["MCP Servers
+        (HuggingFace, etc.)"]
+    end
+
+    Claude --> ClaudeAPI
+    MCP --> MCPServers
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                           Your App                                   │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────────────┐  │
-│  │    Agent     │    │    Runner    │    │   AgentViewModel     │  │
-│  │              │───▶│              │───▶│   (SwiftUI)          │  │
-│  │ • name       │    │ • run()      │    │                      │  │
-│  │ • instructions    │ • stream()   │    │ • messages           │  │
-│  │ • tools      │    │              │    │ • isRunning          │  │
-│  │ • handoffs   │    └──────┬───────┘    └──────────────────────┘  │
-│  │ • guardrails │           │                                       │
-│  └──────────────┘           │                                       │
-│                             ▼                                       │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │                      LLMProvider                              │  │
-│  │  ┌─────────────────┐  ┌─────────────────┐                    │  │
-│  │  │  ClaudeProvider │  │  (Your Custom)  │                    │  │
-│  │  │                 │  │    Provider     │                    │  │
-│  │  └────────┬────────┘  └─────────────────┘                    │  │
-│  └───────────┼──────────────────────────────────────────────────┘  │
-│              │                                                      │
-│              ▼                                                      │
-│  ┌──────────────────────────────────────────────────────────────┐  │
-│  │                        Tools                                  │  │
-│  │  ┌───────────┐  ┌───────────┐  ┌────────────────────────┐   │  │
-│  │  │ Built-in  │  │  Custom   │  │   MCPToolProvider      │   │  │
-│  │  │  Tools    │  │  Tools    │  │   (MCP Servers)        │   │  │
-│  │  └───────────┘  └───────────┘  └────────────────────────┘   │  │
-│  └──────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
-```
+
+### Component Overview
+
+| Component | Purpose |
+|-----------|---------|
+| **Agent** | Defines personality, capabilities, and behavior |
+| **Runner** | Executes the agent loop, handles tool calls and handoffs |
+| **LLMProvider** | Abstraction for LLM backends (Claude, custom) |
+| **Tools** | Extend agent capabilities with callable functions |
+| **MCPToolProvider** | Dynamic tools from MCP servers |
+| **AgentViewModel** | Observable wrapper for SwiftUI integration |
 
 ## Installation
 
@@ -218,8 +243,8 @@ let agent = await Agent.withMCPTools(
 ```
 
 **Supported MCP Transports:**
-- **Streamable HTTP** - For modern servers (HuggingFace, Smithery, etc.)
-- **SSE** - For legacy Server-Sent Events servers
+- **Streamable HTTP** - For modern servers like HuggingFace
+- **SSE** - For Server-Sent Events servers
 - **Stdio** - For local MCP servers (macOS only)
 
 ### 7. Guardrails
