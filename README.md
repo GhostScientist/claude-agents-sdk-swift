@@ -2,9 +2,11 @@
 
 A modern Swift framework for building AI-powered agents with tool calling, multi-agent orchestration, and seamless Apple platform integration.
 
+[![CI](https://github.com/GhostScientist/claude-agents-sdk-swift/actions/workflows/ci.yml/badge.svg)](https://github.com/GhostScientist/claude-agents-sdk-swift/actions/workflows/ci.yml)
 [![Swift 5.9+](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org)
 [![Platforms](https://img.shields.io/badge/Platforms-iOS%2017%2B%20|%20macOS%2014%2B-blue.svg)](https://developer.apple.com)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Documentation](https://img.shields.io/badge/Documentation-DocC-blue.svg)](https://ghostscientist.github.io/claude-agents-sdk-swift/documentation/agentsdk/)
 
 ## Features
 

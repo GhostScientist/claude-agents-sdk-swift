@@ -32,6 +32,8 @@ let package = Package(
     dependencies: [
         // Swift Syntax for macro implementation
         .package(url: "https://github.com/apple/swift-syntax", from: "509.0.0"),
+        // DocC plugin for documentation generation
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0"),
     ],
     targets: [
         // MARK: - Core SDK
