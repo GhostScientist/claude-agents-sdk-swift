@@ -35,6 +35,37 @@ jobs:
             --hosting-base-path claude-agents-sdk-swift \
             --output-path ./docs
 
+      - name: Add redirect and fix GitHub Pages
+        run: |
+          # Add .nojekyll to prevent Jekyll processing
+          touch ./docs/.nojekyll
+
+          # Create redirect index.html at root
+          cat > ./docs/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta http-equiv="refresh" content="0; url=documentation/agentsdk/">
+            <title>Redirecting to AgentSDK Documentation</title>
+          </head>
+          <body>
+            <p>Redirecting to <a href="documentation/agentsdk/">AgentSDK Documentation</a>...</p>
+          </body>
+          </html>
+          EOF
+
+          # Copy the documentation index to 404.html for SPA routing
+          if [ -f ./docs/documentation/agentsdk/index.html ]; then
+            cp ./docs/documentation/agentsdk/index.html ./docs/404.html
+          fi
+
+          # Debug: List what was generated
+          echo "=== Generated docs structure ==="
+          ls -la ./docs/
+          echo "=== Documentation folder ==="
+          ls -la ./docs/documentation/ 2>/dev/null || echo "No documentation folder"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
