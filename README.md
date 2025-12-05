@@ -85,7 +85,7 @@ Add AgentSDK to your Swift package:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/anthropics/agent-sdk-swift.git", from: "0.1.0")
+    .package(url: "https://github.com/GhostScientist/claude-agents-sdk-swift.git", from: "0.1.0")
 ]
 ```
 

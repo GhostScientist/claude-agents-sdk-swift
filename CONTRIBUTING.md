@@ -14,8 +14,8 @@ Thank you for your interest in contributing to AgentSDK! This document provides 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/agent-sdk-swift.git
-   cd agent-sdk-swift
+   git clone https://github.com/GhostScientist/claude-agents-sdk-swift.git
+   cd claude-agents-sdk-swift
    ```
 
 2. Open the package in Xcode:
